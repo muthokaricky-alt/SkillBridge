@@ -1,0 +1,280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* index.css — white bg, emerald accent, soft shadows (ported from style.css) */
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.page {
+  display: none;
+}
+.page.on {
+  display: block;
+  animation: fadeUp 0.3s ease both;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reusable card: white bg, 20px radius, layered soft shadow */
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.ntab {
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #666;
+  background: none;
+  border: none;
+  transition: all 0.2s ease;
+}
+.ntab:hover {
+  color: #111;
+  background: #fafafa;
+}
+.ntab.on {
+  color: #111;
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.rtab {
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e5e5e5;
+  background: white;
+  color: #666;
+  transition: all 0.2s ease;
+}
+.rtab:hover {
+  border-color: #ccc;
+  color: #111;
+}
+.rtab.on {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.etog {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  background: none;
+  transition: all 0.2s ease;
+}
+.etog.on {
+  background: white;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Modal backdrop + box */
+.mo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(17, 17, 17, 0.4);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.mo.on {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mo-box {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 24px;
+  padding: 28px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.96) translateY(12px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+.mo.on .mo-box {
+  transform: none;
+}
+
+.mo-title {
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #111;
+  font-family: "Space Grotesk", sans-serif;
+}
+.mo-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.mo-close:hover {
+  color: #111;
+  background: #fafafa;
+}
+
+.mo-field {
+  margin-bottom: 14px;
+}
+.mo-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #999;
+  margin-bottom: 7px;
+}
+
+.mo-input,
+.mo-select,
+.mo-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  font-size: 13px;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.mo-input:focus,
+.mo-textarea:focus,
+.mo-select:focus {
+  border-color: #10b981;
+  background: white;
+}
+.mo-input::placeholder,
+.mo-textarea::placeholder {
+  color: #aaa;
+}
+.mo-select {
+  cursor: pointer;
+}
+.mo-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.mo-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.mo-cancel {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.mo-cancel:hover {
+  border-color: #ccc;
+  color: #111;
+}
+.mo-confirm {
+  flex: 2;
+  padding: 12px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.mo-confirm:hover {
+  transform: translateY(-2px);
+  background: #047857;
+}
+
+/* Toast — slides up from below */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #111;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.success {
+  background: #047857;
+}
+.toast.error {
+  background: #b91c1c;
+}
+
+
+

@@ -1,6 +1,5 @@
 # SkillBridge
 
-<<<<<<< HEAD
 SkillBridge is a full-stack skill-exchange platform where students and learners can **offer skills, discover people to learn from, request skill swaps, book learning sessions, and manage Skill Coins**.
 
 The project uses a React + Vite frontend and an Express REST API backed by a **real SQLite database**. The database replaces the earlier in-memory data approach, so changes persist when the API server restarts.

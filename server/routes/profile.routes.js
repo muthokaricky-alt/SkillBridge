@@ -1,108 +1,76 @@
-<<<<<<< HEAD
+// server/routes/profile.routes.js
 import { Router } from "express";
 import {
   getProfile,
   addProfileSkill,
   removeProfileSkill,
   adjustCoins,
+  updateOwnProfileInfo,
 } from "../db.js";
+import { requireAuth } from "../middleware/auth.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.json(getProfile());
-});
+// Every route here is "my profile" — requireAuth so req.user.id is always
+// available, instead of the old hardcoded user_id = 1.
+router.use(requireAuth);
 
-=======
-// server/routes/profile.routes.js
-import { Router } from "express";
-import { profile, addProfileSkill, removeProfileSkill, adjustCoins } from "../db.js";
+router.get("/", asyncHandler(async (req, res) => {
+  res.json(await getProfile(req.user.id));
+}));
 
-const router = Router();
+// Self-service edit of basic info (currently just dept/estate — the only
+// way estate ever gets set for a user who signed up themselves, since
+// signup itself doesn't collect it).
+router.patch("/", asyncHandler(async (req, res) => {
+  const { dept, estate } = req.body;
+  const updated = await updateOwnProfileInfo(req.user.id, { dept, estate });
+  res.json(updated);
+}));
 
-// GET /api/profile — the signed-in user's offers, wants, coins, and coin history
-router.get("/", (req, res) => {
-  res.json(profile);
-});
-
-// POST /api/profile/skills — add a skill to "offers" or "wants"
-// body: { type: "offer" | "want", value: "Python" }
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
-router.post("/skills", (req, res) => {
+router.post("/skills", asyncHandler(async (req, res) => {
   const { type, value } = req.body;
 
   if (!value || !["offer", "want"].includes(type)) {
-<<<<<<< HEAD
     return res.status(400).json({
       error: "type must be 'offer' or 'want', and value is required",
     });
   }
 
-  const profile = getProfile();
+  const profile = await getProfile(req.user.id);
   const key = type === "offer" ? "offers" : "wants";
   if (profile[key].some(s => s.toLowerCase() === value.toLowerCase())) {
-=======
-    return res.status(400).json({ error: "type must be 'offer' or 'want', and value is required" });
-  }
-
-  const key = type === "offer" ? "offers" : "wants";
-  const alreadyHasIt = profile[key].some((s) => s.toLowerCase() === value.toLowerCase());
-  if (alreadyHasIt) {
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
     return res.status(409).json({ error: "Skill already in list" });
   }
 
-  addProfileSkill(type, value);
-<<<<<<< HEAD
+  await addProfileSkill(req.user.id, type, value);
 
   if (type === "offer") {
-    adjustCoins(1, `Added skill: ${value}`);
+    await adjustCoins(req.user.id, 1, `Added skill: ${value}`);
   }
 
-  res.status(201).json(getProfile());
-});
+  res.status(201).json(await getProfile(req.user.id));
+}));
 
-=======
-  // teaching a skill earns a Skill Coin — wanting one doesn't
-  if (type === "offer") adjustCoins(1, `Added skill: ${value}`);
-
-  res.status(201).json(profile);
-});
-
-// DELETE /api/profile/skills/:type/:value — remove a skill
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
-router.delete("/skills/:type/:value", (req, res) => {
+router.delete("/skills/:type/:value", asyncHandler(async (req, res) => {
   const { type, value } = req.params;
   if (!["offer", "want"].includes(type)) {
     return res.status(400).json({ error: "type must be 'offer' or 'want'" });
   }
-<<<<<<< HEAD
 
-  removeProfileSkill(type, decodeURIComponent(value));
-  res.json(getProfile());
-});
+  await removeProfileSkill(req.user.id, type, decodeURIComponent(value));
+  res.json(await getProfile(req.user.id));
+}));
 
-=======
-  removeProfileSkill(type, decodeURIComponent(value));
-  res.json(profile);
-});
-
-// PATCH /api/profile/coins — earn or spend Skill Coins
-// body: { delta: number, reason: string }
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
-router.patch("/coins", (req, res) => {
+router.patch("/coins", asyncHandler(async (req, res) => {
   const { delta, reason } = req.body;
   if (typeof delta !== "number") {
     return res.status(400).json({ error: "delta must be a number" });
   }
-<<<<<<< HEAD
 
-  adjustCoins(delta, reason);
-  res.json(getProfile());
-=======
-  adjustCoins(delta, reason);
-  res.json(profile);
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
-});
+  await adjustCoins(req.user.id, delta, reason);
+  res.json(await getProfile(req.user.id));
+}));
 
 export default router;

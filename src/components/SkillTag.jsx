@@ -11,6 +11,7 @@ export default function SkillTag({ label, variant = "offer", onRemove }) {
         <button
           onClick={onRemove}
           className="opacity-50 hover:opacity-100 hover:text-red-500 ml-0.5"
+          aria-label={`Remove ${label}`}
         >
           ×
         </button>

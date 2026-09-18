@@ -17,7 +17,7 @@ export default function Avatar({ name, initials, size = "md", showOnline = false
         {initials}
       </div>
       {showOnline && (
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[var(--sb-surface)]" />
       )}
     </div>
   );

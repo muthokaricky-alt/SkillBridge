@@ -1,40 +1,28 @@
-<<<<<<< HEAD
-import { Router } from "express";
-import {
-  getSessions,
-  addSession,
-  markSessionReviewed,
-} from "../db.js";
-
-const router = Router();
-
-router.get("/", (req, res) => res.json(getSessions()));
-
-router.post("/", (req, res) => {
-=======
 // server/routes/sessions.routes.js
 import { Router } from "express";
-import { sessions, addSession, markSessionReviewed, getNextSessionId } from "../db.js";
+import { getSessions, addSession, markSessionReviewed } from "../db.js";
+import { requireAuth } from "../middleware/auth.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
 
-// GET /api/sessions — every booked session
-router.get("/", (req, res) => {
-  res.json(sessions);
-});
+router.use(requireAuth);
 
-// POST /api/sessions — book a new session
-router.post("/", (req, res) => {
-  // "with" is a reserved word in JS, so it's renamed on destructure
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
+router.get("/", asyncHandler(async (req, res) => {
+  res.json(await getSessions());
+}));
+
+router.post("/", asyncHandler(async (req, res) => {
   const { with: withUser, skill, date, time, dur, color } = req.body;
 
   if (!withUser || !skill || !date || !time) {
     return res.status(400).json({ error: "with, skill, date, and time are required" });
   }
+  if (dur !== undefined && (typeof dur !== "number" || dur <= 0)) {
+    return res.status(400).json({ error: "dur must be a positive number of minutes" });
+  }
 
-<<<<<<< HEAD
-  const newSession = addSession({
+  const newSession = await addSession({
     withUser,
     skill,
     date,
@@ -44,30 +32,12 @@ router.post("/", (req, res) => {
   });
 
   res.status(201).json(newSession);
-});
+}));
 
-=======
-  const newSession = {
-    id: getNextSessionId(),
-    with: withUser,
-    skill,
-    date,
-    time,
-    dur: dur || 60,
-    color: color || "#10B981",
-    reviewed: false,
-  };
-
-  addSession(newSession);
-  res.status(201).json(newSession);
-});
-
-// PATCH /api/sessions/:id — mark a session as reviewed
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
-router.patch("/:id", (req, res) => {
-  const updated = markSessionReviewed(Number(req.params.id));
+router.patch("/:id", asyncHandler(async (req, res) => {
+  const updated = await markSessionReviewed(Number(req.params.id));
   if (!updated) return res.status(404).json({ error: "Session not found" });
   res.json(updated);
-});
+}));
 
 export default router;

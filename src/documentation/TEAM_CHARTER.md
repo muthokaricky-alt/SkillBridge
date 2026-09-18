@@ -13,8 +13,8 @@
 | :--- | :--- | :--- |
 | **Rick Kyalo** | **API Lead** | Endpoint & API contract decisions, request/response schema design |
 | **Bill Amani** | **Backend Dev** | Express API endpoints, database SQL schema, business logic |
-| **Teammate 2** | **Integration / QA Lead** | API contract testing, ring partner endpoint validation, quality assurance |
-| **Teammate 3** | **Docs / DevOps Lead** | README maintenance, environment configuration, team deployment |
+| **Vincent Chege** | **Integration / QA Lead** | API contract testing, ring partner endpoint validation, quality assurance |
+| **Stephanie Jessica** | **Docs / DevOps Lead** | README maintenance, environment configuration, team deployment |
 
 *Note: Roles rotate every 4 weeks per course guidelines.*
 
@@ -29,6 +29,7 @@
 ## 3. Part B App Audit (Resources & User Actions)
 
 ### Core Resources ("Things" Stored)
+
 1. **Users / Profiles**: Student profiles containing name, department, ratings, online status, swap counts, and coin balance.
 2. **Skills & Categories**: Catalog of normalized skills categorised by domain (Technology, Design, Business, etc.) mapped as offers or wants.
 3. **Exchange Requests**: Skill swap or coin exchange proposals sent between students with custom messages and status tracking (`incoming`, `sent`, `accepted`, `declined`).
@@ -53,15 +54,9 @@
 ## 4. Ring Position Configuration
 
 - **Our Team Position**: Team SkillBridge
-- **Upstream Partner** *(Team whose API we consume)*: `[To be assigned by instructor — e.g. Team X]`
-- **Downstream Partner** *(Team consuming our API)*: `[To be assigned by instructor — e.g. Team Y]`
+- **Upstream Partner** *Team 4*
+- **Downstream Partner** *Team 6*
 
 ---
 
 ## 5. Repository Deliverables Checklist
-
-- [x] Team formed, roles assigned, ring position template confirmed
-- [x] GitHub repository created and existing app code committed
-- [x] Database SQL schema (`server/schema.sql`) and seed data (`server/seed.sql`) built
-- [x] `PART_B_AUDIT.md` completed
-- [x] `TEAM_CHARTER.md` written and saved at repository root

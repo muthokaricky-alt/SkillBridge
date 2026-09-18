@@ -8,23 +8,18 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/server.js",
-<<<<<<< HEAD
     "server:dev": "nodemon server/server.js",
     "db:reset": "node server/reset-db.js"
-=======
-    "server:dev": "nodemon server/server.js"
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
     "react": "^18.2.0",
-<<<<<<< HEAD
     "react-dom": "^18.2.0",
     "better-sqlite3": "^11.10.0"
-=======
-    "react-dom": "^18.2.0"
->>>>>>> 222be3cf76ee4a9544f389594999507f18fe9e2f
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

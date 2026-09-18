@@ -1,7 +1,17 @@
+import { createPortal } from "react-dom";
+
 /**
  * ModalShell component serves as a generic wrapper or layout container for all modals.
  * It handles the overlay positioning, visibility classes, background click-to-close behavior,
  * and standard header/close layout.
+ *
+ * Rendered via a React portal directly into document.body rather than inline
+ * where it's used — this guarantees "position: fixed" centers against the
+ * actual browser viewport every time, regardless of what CSS (transforms,
+ * animations, etc.) any ancestor element further up the page happens to
+ * have. Without the portal, an ancestor with an active transform can
+ * silently turn "fixed" into "relative to that ancestor" instead of the
+ * viewport, which is what was pushing this modal down and off-center.
  *
  * @param {Object} props
  * @param {boolean} props.open - Controls the visibility of the modal.
@@ -10,7 +20,7 @@
  * @param {React.ReactNode} props.children - The modal's main body content.
  */
 export default function ModalShell({ open, title, onClose, children }) {
-  return (
+  return createPortal(
     <div
       className={`mo${open ? " on" : ""}`}
       // Closes the modal only if the click was directly on the background overlay (and not its children)
@@ -19,11 +29,12 @@ export default function ModalShell({ open, title, onClose, children }) {
       <div className="mo-box">
         <div className="mo-title">
           {title}
-          <button className="mo-close" onClick={onClose}>✕</button>
+          <button className="mo-close" onClick={onClose} aria-label="Close dialog">✕</button>
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

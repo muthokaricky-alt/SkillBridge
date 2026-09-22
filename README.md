@@ -44,7 +44,7 @@ The project uses a React + Vite frontend and an Express REST API backed by a **r
 
 ---
 
-## 🏗️ Project Architecture
+##  Project Architecture
 
 ```text
 SkillBridge/
@@ -101,7 +101,7 @@ The frontend does not access SQLite directly. All database operations go through
 
 ---
 
-## 🗄️ Database
+##  Database
 
 SkillBridge uses SQLite because it provides a real relational database without requiring a separate database server during development.
 
@@ -439,7 +439,7 @@ Instead of relying only on traditional courses, SkillBridge allows users to exch
 
 ---
 
-## 📄 License
+##  License
 
 This project is currently intended as an academic/personal portfolio project. Add the license of your choice before distributing it publicly.
 =======

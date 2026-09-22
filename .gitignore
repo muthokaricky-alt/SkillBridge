@@ -2,3 +2,10 @@ node_modules
 dist
 .DS_Store
 .env
+
+# runtime SQLite data — regenerated automatically by server/db.js on first
+# run (or via `npm run db:reset`); shouldn't be committed since it's
+# per-developer runtime state, not source
+skillbridge.db
+skillbridge.db-shm
+skillbridge.db-wal

@@ -1,0 +1,504 @@
+openapi: 3.0.3
+
+info:
+  title: SkillBridge API
+  version: 1.0.0
+  description: >
+    API contract for SkillBridge based on the Week 3 endpoint list.
+    This API provides expert discovery, consultation booking,
+    logistics integration with Maji Website, and delivery tracking.
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+tags:
+  - name: Experts
+  - name: Skills
+  - name: Requests
+  - name: Logistics
+
+paths:
+
+  /experts:
+    get:
+      tags: [Experts]
+      summary: Return verified expert profiles
+      operationId: getExperts
+      parameters:
+        - name: estate
+          in: query
+          schema:
+            type: string
+          example: Westlands
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [rating, proximity]
+          example: rating
+        - name: lat
+          in: query
+          schema:
+            type: number
+            format: double
+          example: -1.286
+        - name: lng
+          in: query
+          schema:
+            type: number
+            format: double
+          example: 36.817
+      responses:
+        "200":
+          description: Experts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expert"
+
+  /experts/{id}:
+    get:
+      tags: [Experts]
+      summary: Return detailed expert profile
+      operationId: getExpertById
+      parameters:
+        - $ref: "#/components/parameters/ExpertId"
+      responses:
+        "200":
+          description: Expert found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expert"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /skills:
+    get:
+      tags: [Skills]
+      summary: Return categorized skill offers
+      operationId: getSkills
+      parameters:
+        - name: tag
+          in: query
+          schema:
+            type: string
+          example: Agronomy
+      responses:
+        "200":
+          description: Skills retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Skill"
+
+  /experts/{id}/availability:
+    get:
+      tags: [Experts]
+      summary: Return expert availability
+      operationId: getExpertAvailability
+      parameters:
+        - $ref: "#/components/parameters/ExpertId"
+      responses:
+        "200":
+          description: Available time slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Availability"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /requests:
+    post:
+      tags: [Requests]
+      summary: Create a consultation booking request
+      operationId: createConsultationRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultationRequest"
+      responses:
+        "201":
+          description: Consultation request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          description: Expert does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /experts/{id}/reviews:
+    get:
+      tags: [Experts]
+      summary: Return expert review summary
+      operationId: getExpertReviews
+      parameters:
+        - $ref: "#/components/parameters/ExpertId"
+      responses:
+        "200":
+          description: Reviews retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewSummary"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /stations:
+    get:
+      tags: [Logistics]
+      summary: Return nearby Maji vendor stations
+      operationId: getStations
+      parameters:
+        - name: estate
+          in: query
+          schema:
+            type: string
+          example: Madaraka
+      responses:
+        "200":
+          description: Stations retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Station"
+
+  /estates:
+    get:
+      tags: [Logistics]
+      summary: Return supported estates
+      operationId: getEstates
+      responses:
+        "200":
+          description: Estates retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Estate"
+
+  /payment-methods:
+    get:
+      tags: [Logistics]
+      summary: Return available payment methods
+      operationId: getPaymentMethods
+      responses:
+        "200":
+          description: Payment methods retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentMethod"
+
+  /deliveries/{id}:
+    get:
+      tags: [Logistics]
+      summary: Track a delivery
+      operationId: getDelivery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 101
+      responses:
+        "200":
+          description: Delivery found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delivery"
+
+  /deliveries:
+    post:
+      tags: [Logistics]
+      summary: Create a delivery order
+      operationId: createDelivery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeliveryRequest"
+      responses:
+        "201":
+          description: Delivery created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+components:
+
+  parameters:
+    ExpertId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 12
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: Expert not found
+
+    Expert:
+      type: object
+      required:
+        - id
+        - name
+        - estate
+        - rating
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Grace Mwangi
+        estate:
+          type: string
+          example: Westlands
+        rating:
+          type: number
+          format: float
+          example: 4.8
+        latitude:
+          type: number
+          example: -1.286
+        longitude:
+          type: number
+          example: 36.817
+        bio:
+          type: string
+          example: Certified Agronomy mentor.
+
+    Skill:
+      type: object
+      required:
+        - id
+        - name
+        - category
+      properties:
+        id:
+          type: integer
+          example: 5
+        name:
+          type: string
+          example: Soil Health
+        category:
+          type: string
+          example: Agriculture
+
+    Availability:
+      type: object
+      required:
+        - date
+        - startTime
+        - durationMinutes
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2026-09-15"
+        startTime:
+          type: string
+          format: time
+          example: "10:00:00"
+        durationMinutes:
+          type: integer
+          example: 60
+
+    ConsultationRequest:
+      type: object
+      required:
+        - farmerName
+        - topic
+        - expertId
+        - date
+      properties:
+        farmerName:
+          type: string
+          example: John Kamau
+        topic:
+          type: string
+          example: Irrigation Systems
+        expertId:
+          type: integer
+          example: 12
+        date:
+          type: string
+          format: date-time
+          example: "2026-09-20T10:00:00Z"
+
+    RequestResponse:
+      type: object
+      required:
+        - requestId
+        - status
+      properties:
+        requestId:
+          type: integer
+          example: 501
+        status:
+          type: string
+          example: Pending
+
+    ReviewSummary:
+      type: object
+      required:
+        - rating
+        - reviewCount
+        - completedSessions
+      properties:
+        rating:
+          type: number
+          example: 4.9
+        reviewCount:
+          type: integer
+          example: 87
+        completedSessions:
+          type: integer
+          example: 210
+
+    Station:
+      type: object
+      required:
+        - stationId
+        - estate
+        - operatingHours
+        - stockLevel
+      properties:
+        stationId:
+          type: integer
+          example: 8
+        estate:
+          type: string
+          example: Madaraka
+        operatingHours:
+          type: string
+          example: "08:00-20:00"
+        stockLevel:
+          type: integer
+          example: 120
+
+    Estate:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Madaraka
+
+    PaymentMethod:
+      type: object
+      required:
+        - name
+        - transactionFee
+        - gatewayStatus
+      properties:
+        name:
+          type: string
+          example: M-Pesa Paybill
+        transactionFee:
+          type: number
+          example: 20
+        gatewayStatus:
+          type: string
+          enum:
+            - Online
+            - Offline
+          example: Online
+
+    DeliveryRequest:
+      type: object
+      required:
+        - stationId
+        - estateAddress
+        - phone
+        - paymentMethod
+      properties:
+        stationId:
+          type: integer
+          example: 8
+        estateAddress:
+          type: string
+          example: Madaraka Estate, Nairobi
+        phone:
+          type: string
+          example: "+254712345678"
+        paymentMethod:
+          type: string
+          example: M-Pesa Paybill
+
+    Delivery:
+      type: object
+      required:
+        - deliveryId
+        - status
+        - estimatedArrival
+      properties:
+        deliveryId:
+          type: integer
+          example: 101
+        status:
+          type: string
+          example: Dispatched
+        estimatedArrival:
+          type: string
+          format: date-time
+          example: "2026-09-15T16:30:00Z"

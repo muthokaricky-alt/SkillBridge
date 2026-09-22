@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  title: SkillBridge–Maji Integration API
+  version: 1.0.0
+  description: >
+    API exposed by Maji for SkillBridge to read estate, vendor, and
+    payment-method data, and to manage driver-interest and customer records.
+paths:
+  /estates:
+    get:
+      summary: Return estates with active delivery schedules
+      parameters:
+        - name: deliveryStatus
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [active, inactive]
+          example: active
+      responses:
+        '200':
+          description: A list of estates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, name, deliveryStatus]
+                  properties:
+                    id:
+                      type: string
+                      example: "est_1029"
+                    name:
+                      type: string
+                      example: "Kahawa Sukari"
+                    deliveryStatus:
+                      type: string
+                      enum: [active, inactive]
+                      example: active
+
+  /vendors/stations:
+    get:
+      summary: Return each vendor's station name and primary target estate
+      responses:
+        '200':
+          description: A list of vendor stations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [vendorId, stationName, targetEstateId]
+                  properties:
+                    vendorId:
+                      type: string
+                      example: "ven_204"
+                    stationName:
+                      type: string
+                      example: "Githunguri Water Point"
+                    targetEstateId:
+                      type: string
+                      example: "est_1029"
+
+  /customers/payment-method:
+    get:
+      summary: Return customers' primary payment methods to determine Skill Coin purchase prompt eligibility
+      responses:
+        '200':
+          description: A list of customers and their payment methods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [customerId, paymentMethod]
+                  properties:
+                    customerId:
+                      type: string
+                      example: "cus_774"
+                    paymentMethod:
+                      type: string
+                      enum: [mpesa, cash, other]
+                      example: mpesa
+
+  /customers/{id}:
+    delete:
+      summary: Delete a customer record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "cus_774"
+      responses:
+        '204':
+          description: Customer deleted
+
+  /estates/{estateId}/driver-interests:
+    post:
+      summary: Register a user's interest in delivery work at an estate
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "est_1029"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+                  example: "usr_5581"
+                contactMethod:
+                  type: string
+                  example: "+254712345678"
+      responses:
+        '201':
+          description: Driver interest record created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, userId, estateId, status, createdAt]
+                properties:
+                  id:
+                    type: string
+                    example: "di_9911"
+                  userId:
+                    type: string
+                    example: "usr_5581"
+                  estateId:
+                    type: string
+                    example: "est_1029"
+                  status:
+                    type: string
+                    enum: [pending, contacted, confirmed]
+                    example: pending
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2026-09-07T10:00:00Z"

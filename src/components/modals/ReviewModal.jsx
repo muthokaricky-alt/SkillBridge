@@ -16,7 +16,7 @@ export default function ReviewModal({ open, onClose, session, star, setStar, onS
   return (
     <ModalShell open={open} title="Rate this session" onClose={onClose}>
       {/* Renders summary information about the session if available */}
-      <div className="p-3.5 bg-[#FAFAFA] border border-[#E5E5E5] rounded-2xl mb-4 text-sm text-[#444]">
+      <div className="p-3.5 bg-[var(--sb-surface-alt)] border border-[var(--sb-border)] rounded-2xl mb-4 text-sm text-[var(--sb-text-secondary)]">
 
         {session ? `${session.with} · ${session.skill}` : ""}
       </div>
@@ -29,7 +29,7 @@ export default function ReviewModal({ open, onClose, session, star, setStar, onS
               key={n}
               onClick={() => setStar(n)}
               className={`text-3xl leading-none cursor-pointer transition-colors ${
-                n <= star ? "text-amber-500" : "text-[#DDD] hover:text-amber-300"
+                n <= star ? "text-amber-500" : "text-[var(--sb-text-tertiary)] hover:text-amber-300"
               }`}
             >
               ★

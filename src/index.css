@@ -4,6 +4,66 @@
 
 /* index.css — white bg, emerald accent, soft shadows (ported from style.css) */
 
+/* ---------------------------------------------------------------------
+   Focus visibility for keyboard navigation. Tailwind's base reset strips
+   the browser's default focus outline on interactive elements, and
+   nothing in this codebase replaced it — meaning a keyboard user tabbing
+   through the app couldn't see where focus was at all. :focus-visible
+   (not plain :focus) means this only shows up for keyboard/assistive-tech
+   navigation, not on every mouse click, matching how sighted mouse users
+   already expect buttons to look.
+   --------------------------------------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------
+   Theme tokens. Every component uses these instead of raw hex values so
+   dark mode is just swapping the values below, not touching every file.
+   Toggled by adding/removing the "dark" class on <html> — see
+   src/components/ThemeToggle.jsx and the useEffect in App.jsx.
+   --------------------------------------------------------------------- */
+:root {
+  --sb-bg: #ffffff;
+  --sb-surface: #ffffff;
+  --sb-surface-alt: #fafafa;
+  --sb-border: #e5e5e5;
+  --sb-border-subtle: #f0f0f0;
+  --sb-text-primary: #111111;
+  --sb-text-secondary: #666666;
+  --sb-text-tertiary: #999999;
+  --sb-inverse: #111111;    /* CTA button bg / selected calendar cell */
+  --sb-inverse-text: #ffffff;
+  --sb-shadow-1: rgba(0, 0, 0, 0.04);
+  --sb-shadow-2: rgba(0, 0, 0, 0.06);
+}
+
+html.dark {
+  --sb-bg: #121212;
+  --sb-surface: #1c1c1e;
+  --sb-surface-alt: #262628;
+  --sb-border: #333335;
+  --sb-border-subtle: #2a2a2c;
+  --sb-text-primary: #f5f5f5;
+  --sb-text-secondary: #b3b3b3;
+  --sb-text-tertiary: #8a8a8e;
+  --sb-inverse: #f5f5f5;
+  --sb-inverse-text: #111111;
+  --sb-shadow-1: rgba(0, 0, 0, 0.3);
+  --sb-shadow-2: rgba(0, 0, 0, 0.45);
+}
+
+html.dark body {
+  background: var(--sb-bg);
+}
+
 body {
   font-family: "Inter", sans-serif;
 }
@@ -26,15 +86,15 @@ body {
   }
 }
 
-/* Reusable card: white bg, 20px radius, layered soft shadow */
+/* Reusable card: uses theme tokens so it flips automatically in dark mode */
 .card {
-  background: white;
+  background: var(--sb-surface);
   border-radius: 20px;
   padding: 20px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--sb-border);
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.04),
-    0 10px 30px rgba(0, 0, 0, 0.06);
+    0 4px 12px var(--sb-shadow-1),
+    0 10px 30px var(--sb-shadow-2);
 }
 
 .ntab {
@@ -44,18 +104,18 @@ body {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  color: #666;
+  color: var(--sb-text-secondary);
   background: none;
   border: none;
   transition: all 0.2s ease;
 }
 .ntab:hover {
-  color: #111;
-  background: #fafafa;
+  color: var(--sb-text-primary);
+  background: var(--sb-surface-alt);
 }
 .ntab.on {
-  color: #111;
-  background: #f5f5f5;
+  color: var(--sb-text-primary);
+  background: var(--sb-surface-alt);
   font-weight: 600;
 }
 
@@ -65,14 +125,14 @@ body {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid #e5e5e5;
-  background: white;
-  color: #666;
+  border: 1px solid var(--sb-border);
+  background: var(--sb-surface);
+  color: var(--sb-text-secondary);
   transition: all 0.2s ease;
 }
 .rtab:hover {
-  border-color: #ccc;
-  color: #111;
+  border-color: var(--sb-text-tertiary);
+  color: var(--sb-text-primary);
 }
 .rtab.on {
   background: #ecfdf5;
@@ -88,14 +148,14 @@ body {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  color: #666;
+  color: var(--sb-text-secondary);
   background: none;
   transition: all 0.2s ease;
 }
 .etog.on {
-  background: white;
-  color: #111;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--sb-surface);
+  color: var(--sb-text-primary);
+  box-shadow: 0 2px 8px var(--sb-shadow-1);
 }
 
 /* Modal backdrop + box */
@@ -119,8 +179,8 @@ body {
 }
 
 .mo-box {
-  background: white;
-  border: 1px solid #e5e5e5;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
   border-radius: 24px;
   padding: 28px;
   max-width: 480px;
@@ -142,7 +202,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #111;
+  color: var(--sb-text-primary);
   font-family: "Space Grotesk", sans-serif;
 }
 .mo-close {
@@ -150,14 +210,14 @@ body {
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #999;
+  color: var(--sb-text-tertiary);
   transition: color 0.2s;
   padding: 4px 8px;
   border-radius: 8px;
 }
 .mo-close:hover {
-  color: #111;
-  background: #fafafa;
+  color: var(--sb-text-primary);
+  background: var(--sb-surface-alt);
 }
 
 .mo-field {
@@ -169,7 +229,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #999;
+  color: var(--sb-text-tertiary);
   margin-bottom: 7px;
 }
 
@@ -178,11 +238,11 @@ body {
 .mo-textarea {
   width: 100%;
   padding: 12px 14px;
-  background: #fafafa;
-  border: 1px solid #e5e5e5;
+  background: var(--sb-surface-alt);
+  border: 1px solid var(--sb-border);
   border-radius: 14px;
   font-size: 13px;
-  color: #111;
+  color: var(--sb-text-primary);
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
@@ -191,11 +251,11 @@ body {
 .mo-textarea:focus,
 .mo-select:focus {
   border-color: #10b981;
-  background: white;
+  background: var(--sb-surface);
 }
 .mo-input::placeholder,
 .mo-textarea::placeholder {
-  color: #aaa;
+  color: var(--sb-text-tertiary);
 }
 .mo-select {
   cursor: pointer;
@@ -213,25 +273,25 @@ body {
 .mo-cancel {
   flex: 1;
   padding: 12px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--sb-border);
   border-radius: 14px;
-  background: white;
+  background: var(--sb-surface);
   font-size: 13px;
   font-weight: 500;
-  color: #666;
+  color: var(--sb-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
 }
 .mo-cancel:hover {
-  border-color: #ccc;
-  color: #111;
+  border-color: var(--sb-text-tertiary);
+  color: var(--sb-text-primary);
 }
 .mo-confirm {
   flex: 2;
   padding: 12px;
-  background: #111;
-  color: white;
+  background: var(--sb-inverse);
+  color: var(--sb-inverse-text);
   border: none;
   border-radius: 14px;
   font-size: 13px;

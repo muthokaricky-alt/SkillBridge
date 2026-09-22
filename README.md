@@ -42,6 +42,7 @@ Built as a semester project using **React**, **Express**, and **SQLite**.
 * Book consultation sessions.
 * Submit learning requests (skill swaps or Skill Coin requests).
 * Track request status.
+##  Project Architecture
 
 ### Reviews
 
@@ -53,6 +54,7 @@ Built as a semester project using **React**, **Express**, and **SQLite**.
 
 * Discover nearby vendor water stations for in-person study sessions.
 * Runs against mock data until Maji's real API is configured — every response is clearly labeled `"source": "mock"` or `"source": "live"`.
+##  Database
 
 ### Interface
 
@@ -282,7 +284,26 @@ The first three and `PART_B_AUDIT.md`/`ENDPOINT_LIST.md` are dated weekly lab de
 
 ---
 
-## Contributors
+
+##  License
+
+This project is currently intended as an academic/personal portfolio project. Add the license of your choice before distributing it publicly.
+SkillBridge is a peer-to-peer skill exchange platform built for students. Instead of paying for tutoring or ads-driven marketplaces, students trade what they know for what they want to learn — either through a direct **skill swap** (you teach me UI/UX, I teach you web dev) or by spending **Skill Coins**, an in-app currency earned by teaching, completing sessions, and leaving reviews.
+
+We separated each page we wanted among the 4 of us, then we did our parts separately to reduce merge conflicts, then we gave the full codebase to Rick, who pushed it to GitHub. We then refined the project later.
+
+> **Note:** We started on an earlier repo but ran into an issue with it, so this repo is a fresh start from that point onward.
+
+## What it does
+
+- **Discover** — Browse other students, filter by skill category or search by name/department, and see a live compatibility score based on what you can teach and what you want to learn. Send a swap or coin-based exchange request straight from a match card.
+- **My Profile** — Manage the skills you teach and the skills you want to learn, track your Skill Coins balance, and see your stats at a glance.
+- **Requests** — Review incoming exchange requests, accept or decline them, and track requests you've sent and exchanges currently active.
+- **Schedule** — Book sessions with matched students, browse a calendar of upcoming sessions, and rate a session once it's done.
+
+All four pages are fully built and working end-to-end, backed by a real REST API instead of hardcoded data (see below).
+
+## Tech stack
 
 Developed as a collaborative university project.
 
